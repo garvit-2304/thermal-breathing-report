@@ -1,0 +1,3 @@
+-r requirements.txt
+# Use contrib instead of installing multiple OpenCV wheel variants together.
+opencv-contrib-python==4.12.0.88

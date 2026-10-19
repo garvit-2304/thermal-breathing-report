@@ -1,0 +1,168 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=25mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{booktabs,tabularx,array}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\definecolor{ink}{HTML}{173E4B}
+\definecolor{accent}{HTML}{147D86}
+\hypersetup{colorlinks=true,urlcolor=accent,linkcolor=ink,citecolor=accent,
+pdftitle={Thermal Breathing-Rate Detection and Facial Region Segmentation: Progress Report}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{7pt}
+\setlength{\headheight}{14pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Thermal breathing research}
+\fancyhead[R]{\small Progress report}
+\fancyfoot[L]{\small Prepared for our TAs and mentors}
+\fancyfoot[R]{\small\thepage}
+\setlist[enumerate]{leftmargin=*,itemsep=5pt}
+\begin{document}
+{\small\color{accent} PROJECT PROGRESS REPORT \hfill 19 October 2026}
+
+\vspace{8mm}
+{\LARGE\bfseries\color{ink} Breathing-Rate Detection and\\[3pt] Facial Region Segmentation\\[3pt] from Thermal Video}
+
+\vspace{4mm}
+\textit{Work completed, results so far, and plans for the next stage}
+
+\section{What we are trying to build}
+Our goal is to estimate a person's breathing rate from thermal video and identify the facial regions that carry the breathing signal. We want the system to keep following those regions when the person moves, rather than depend on a fixed crop that may no longer cover the nose.
+
+Two papers have helped us decide how to approach this. Kwon et al.~\cite{kwon} provides the basis for finding breathing-associated facial regions. JoulesEye~\cite{jouleseye} informs our work on tracking the nasal region during movement. We are using ideas from both studies alongside our own data processing, model comparisons and evaluation.
+
+So far, we have prepared the recordings, tested several breathing-rate estimators, added tracking, and implemented a segmentation branch. There are encouraging results in parts of the system, but we do not yet have enough evidence to call the complete detector reliable. This report explains what we have built and where we are currently stuck. The experiments described here were completed by 18 October; this report does not introduce new experimental results.
+
+\section{Getting the data and evaluation into shape}
+The dataset contains five people, with one recording per person. We currently use four recordings. The fifth has a mismatch between the number of images and reference records, so we have left it out until the alignment can be checked.
+
+When reviewing the earlier pipeline, we found several issues that affected how its results should be interpreted. It assumed a recording speed instead of consistently using the timestamps, shortened elapsed time after removing frozen frames, and used a broad facial crop. Breath counting also needed a consistent interpretation of the reference markers.
+
+We changed the processing to preserve the original timeline and record missing or unusable samples explicitly. We also introduced shared evaluation rules so that methods are compared on the same usable segments. Exact synchronization and the meaning of the reference annotations still need confirmation from the original acquisition information.
+
+These corrections matter because a lower error is only useful if the signal and its reference refer to the same period. We therefore do not use the older reported result as evidence that segmentation works or fails.
+
+\section{Breathing-rate estimation and tracking}
+We tested a simple baseline, a frequency-based estimator, a CNN model, and a CNN combined with a GRU. In plain terms, the CNN learns patterns in the extracted signal, while the GRU also models how those patterns change over time. For the learned models, we left one person out of training and tested on that person, repeating this across the four usable participants.
+
+We then added CSRT tracking, taking inspiration from JoulesEye, to test whether following the facial region helped. Our version uses thermal images and manually initialized regions. It does not include JoulesEye's RGB-assisted initialization or detector-based recovery.
+
+\subsection*{What the comparison showed}
+Table~\ref{tab:tracking} uses the same 77 eligible segments for both fixed and tracked regions. The values are mean absolute errors in breaths per minute, averaged equally across participants. Lower values are better.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\linewidth}{@{}Xrr@{}}
+\toprule
+Method & Fixed region & Tracked region\\
+\midrule
+Typical training-set rate (baseline) & 2.501 & 2.501\\
+Frequency-based estimate & 10.618 & 10.809\\
+CNN & 3.577 & 3.268\\
+CNN + GRU & 2.986 & 2.969\\
+\bottomrule
+\end{tabularx}
+\caption{Paired comparison from the planned seed-7 run.}
+\label{tab:tracking}
+\end{table}
+
+Tracking helped the CNN in this run. For the CNN + GRU, however, the improvement was only 0.017 breaths per minute, or about 0.6\%. We would not treat that as a meaningful practical gain yet. The simple baseline also had lower error than either learned model. That baseline predicts a typical rate from the training data; it is a useful check on our models, but it does not detect an individual's breathing from the video.
+
+We repeated training with three initializations to see how stable the results were. The CNN's average error changed from 3.682 to 3.247 with tracking. The CNN + GRU average changed from 6.803 to 6.795, with one initialization producing an error of about 14.87 for both variants. This variation is a concern we still need to investigate.
+
+The visual checks were just as useful as the numbers. In some samples, the tracker moved towards the neck or eyes while continuing to report success. That tells us we need a separate check of where the tracker is looking. A breathing-rate estimate alone cannot confirm that it is following the nose correctly.
+
+\section{Adding breathing-region segmentation}
+Following Kwon's approach, we implemented a method that looks at thermal variation over roughly four seconds, normalizes that variation into a map, and groups nearby pixels into candidate breathing regions. The grouping method is called a Markov random field, or MRF. The selected regions are then used to extract a breathing signal.
+
+We also corrected an image-alignment error: the earlier code applied the estimated movement in the wrong sampling direction. The updated code aligns images correctly and generates masks throughout the recording, rather than relying on one mask averaged over the whole sequence. It records times when there is not enough valid information to produce a signal.
+
+One point from our earlier explanation also needed correcting. Kwon's variation measure is sample standard deviation, so taking a square root was appropriate. That part of the earlier implementation was not the reason it struggled.
+
+\subsection*{The latest experiment}
+We processed the four usable recordings with and without alignment and segmentation. We also included deliberately incorrect alignment as a controlled comparison. All variants used the planned 20-second segments and the same evaluation rules.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\linewidth}{@{}Xr@{}}
+\toprule
+Approach & Eligible segments\\
+\midrule
+Fixed region, no segmentation & 73 of 84\\
+Correct alignment, no segmentation & 65 of 84\\
+Correct alignment with segmentation & 0 of 84\\
+Deliberately wrong alignment with segmentation & 0 of 84\\
+\bottomrule
+\end{tabularx}
+\caption{Coverage in the latest segmentation experiment.}
+\label{tab:coverage}
+\end{table}
+
+The zero counts in Table~\ref{tab:coverage} are the main limitation of this experiment. The segmentation method needs recent valid images before it can decide which pixels are changing. Frozen frames and tracking interruptions leave gaps, and the additional history needed around those gaps reduces usable coverage further. Under our declared rules, none of the segmentation windows had enough valid support to be evaluated.
+
+\textbf{This leaves the segmentation accuracy unanswered.} It does not give us a zero error, and it does not demonstrate that MRF segmentation is ineffective. We kept the quality rules unchanged rather than relaxing them to obtain a score.
+
+We could still compare alignment alone on 65 shared segments. With peak counting, the average error fell from 6.26 to 5.04 breaths per minute. With the frequency-based estimator, it increased from 10.12 to 10.54. The result depends on how breathing rate is estimated; neither comparison establishes a benefit from segmentation.
+
+The segments in both experiments overlap and come from only four people. They are not independent recordings. The latest results also should not be ranked directly against the earlier model results, because the usable segments and processing differ.
+
+\section{What we can say at this stage}
+We now have code and saved results for the main parts of the proposed system: data preparation, rate estimation, tracking and segmentation. The notebook brings these steps together with their outputs so that the work can be reviewed and presented. The latest software checks recorded 25 passes and one skipped hardware-dependent test. These checks help verify the implementation, but they do not establish accuracy on real breathing data.
+
+The masks still need closer validation. Some examples include cheeks and facial edges as well as the nose. Movement and other image changes can produce variation too, so a plausible-looking region is not sufficient evidence that we have isolated breathing. Independently marked images would help us assess this directly.
+
+Our recordings also differ from those in the reference studies. Kwon's study used 15 participants and a synchronized respiratory waveform, while our current evaluation has four usable recordings and event annotations. Some settings in the segmentation method are not fully specified in the paper, and our tracking adaptation is thermal-only. We have documented these choices rather than assuming that the papers' published performance transfers to our system.
+
+Taken together, the results show progress in building and testing the pipeline. They also show that improving one component does not automatically make the complete detector reliable. Our immediate task is to obtain an evaluable segmentation comparison and check that the selected regions really correspond to breathing.
+
+\section{What we plan to do next}
+\begin{enumerate}
+\item \textbf{Check the recordings against the original acquisition files.}
+We need to confirm the frozen periods, timestamps and breath annotations, and determine whether the excluded recording can be aligned reliably.
+
+\item \textbf{Obtain continuous segments for the next experiment.}
+If uninterrupted source video is available, we should recover it. Otherwise, we need new still recordings with synchronized references. The next comparison needs at least four seconds of usable history followed by a complete 20-second evaluation segment.
+
+\item \textbf{Validate tracking and segmentation separately.}
+We plan to mark nose locations and expected breathing regions in representative images. This will help distinguish a drifting tracker from a segmentation error or a problem in the rate estimator.
+
+\item \textbf{Repeat the comparison with and without segmentation.}
+Both approaches should use the same aligned images and eligible segments. We will report the rate errors alongside the number of usable segments and the reasons for exclusions.
+
+\item \textbf{Test the combined detector on stronger data.}
+After addressing the immediate coverage issue, we need to investigate model instability, add failure detection and recovery, and evaluate on more people and repeated sessions. A synchronized respiratory waveform would allow a more detailed check of the extracted signal.
+\end{enumerate}
+
+For discussion with our TAs and mentors, the most useful guidance would be on access to original recordings or new data collection, how to annotate breathing regions, and what accuracy and failure-reporting targets should define a successful project.
+
+Our overall aim remains a breathing-rate detector that can also identify and follow the facial regions associated with breathing. We have made progress on each component; the next stage is to show that they work together on recordings we can evaluate with confidence.
+
+\begin{thebibliography}{9}
+\bibitem{kwon}
+Kwon et al. (2023).
+\textit{Breathing-Associated Facial Region Segmentation for Thermal Camera-Based Indirect Breathing Monitoring}.
+\href{https://doi.org/10.1109/JTEHM.2023.3295775}{doi:10.1109/JTEHM.2023.3295775}.
+
+\bibitem{jouleseye}
+Adhikary et al. (2023).
+\textit{JoulesEye: Energy Expenditure Estimation and Respiration Sensing from Thermal Imagery While Exercising}.
+\href{https://sustainability-lab.github.io/jouleseye/}{Project page and paper}.
+\end{thebibliography}
+
+\subsection*{Supporting project records}
+The executed walkthrough is saved in
+\path{docs/thermal_respiration_walkthrough.ipynb}.
+The experiment protocols and results are recorded in
+\path{docs/kwon_reproduction_protocol.md},
+\path{docs/kwon_experiment_results.md} and
+\path{docs/tracking_experiment_results.md}.
+Detailed results for the latest experiment are in
+\path{artifacts/kwon_experiment/evaluation.json}.
+\end{document}

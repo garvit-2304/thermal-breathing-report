@@ -10,13 +10,17 @@ def integrate(original, experiment):
     kept = []
     for cell in result['cells']:
         source = ''.join(cell['source'])
-        if cell.get('metadata', {}).get('kwon_integrated') or source.startswith('## 15. Limitations after'):
+        if (cell.get('metadata', {}).get('kwon_integrated') or
+                cell.get('metadata', {}).get('short_segment_integrated') or
+                source.startswith('## 15. Limitations after')):
             continue
         source = source.replace("The standard-deviation map in these scripts should not be called an exact reproduction of the paper's variance-based method. These scripts also contain machine-specific paths and are shown as historical evidence, not executed here.", CORRECTION)
         cell['source'] = source
         kept.append(cell)
-    notice = '\n\n**Primary objective: reproduce Kwon et al. BAFR segmentation.** Section 15 contains the corrected implementation and latest experiment. Earlier neural and CSRT results are historical exploratory work, not completion of the reproduction. The new experiment has zero eligible MRF windows; segmentation accuracy remains unmeasured.\n'
-    if '**Primary objective: reproduce Kwon' not in kept[0]['source']:
+    old_notice = '**Primary objective: reproduce Kwon et al. BAFR segmentation.** Section 15 contains the corrected implementation and latest experiment. Earlier neural and CSRT results are historical exploratory work, not completion of the reproduction. The new experiment has zero eligible MRF windows; segmentation accuracy remains unmeasured.'
+    kept[0]['source'] = kept[0]['source'].replace(old_notice, '')
+    notice = '\n\n**Project aim:** build a thermal-video breathing-rate detector with breathing-region segmentation. Kwon et al. guides the segmentation branch, and JoulesEye guides tracking. Section 15 records the corrected Kwon-style implementation and original 20-second experiment; Section 16 is an exploratory short-segment follow-up.\n'
+    if '**Project aim:** build a thermal-video' not in kept[0]['source']:
         kept[0]['source'] += notice
     for i, source_cell in enumerate(experiment['cells']):
         cell = copy.deepcopy(source_cell)
@@ -42,6 +46,9 @@ def main():
     folder = Path(__file__).resolve().parent
     path = folder / 'thermal_respiration_walkthrough.ipynb'
     render(integrate(json.loads(path.read_text(encoding='utf-8')), json.loads((folder / 'kwon_reproduction.ipynb').read_text(encoding='utf-8'))), path)
+    if (folder / 'short_segment_experiment.ipynb').exists():
+        from integrate_short_segments import main as integrate_short_segments
+        integrate_short_segments()
 
 if __name__ == '__main__':
     main()

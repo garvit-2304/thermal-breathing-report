@@ -547,6 +547,9 @@ def build(out_stem='thermal_respiration_walkthrough'):
     if out_stem == 'thermal_respiration_walkthrough' and (out.parent / 'kwon_reproduction.ipynb').exists():
         from integrate_kwon import integrate as integrate_kwon
         notebook = integrate_kwon(notebook, json.loads((out.parent / 'kwon_reproduction.ipynb').read_text(encoding='utf-8')))
+    if out_stem == 'thermal_respiration_walkthrough' and (out.parent / 'short_segment_experiment.ipynb').exists():
+        from integrate_short_segments import integrate as integrate_short_segments
+        notebook = integrate_short_segments(notebook, json.loads((out.parent / 'short_segment_experiment.ipynb').read_text(encoding='utf-8')))
     render(notebook, out)
 
 

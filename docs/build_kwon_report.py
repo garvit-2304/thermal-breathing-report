@@ -6,7 +6,7 @@ import build_walkthrough as book
 ROOT = book.ROOT
 book.cells = []
 book.md('''# Kwon BAFR reproduction: corrected implementation and coverage experiment
-**Executed 18 October 2026.** This is the primary project objective. Earlier CNN/GRU and CSRT studies are exploratory background.
+**Executed 18 October 2026.** This is the Kwon-inspired segmentation branch of the broader breathing-rate detector project. Earlier CNN/GRU and CSRT studies test other parts of the same project.
 
 Source: Kwon et al., *Breathing-Associated Facial Region Segmentation for Thermal Camera-Based Indirect Breathing Monitoring*, [DOI 10.1109/JTEHM.2023.3295775](https://doi.org/10.1109/JTEHM.2023.3295775), supplied PDF pages 3–5, equations 1–2 and Figure 4.
 

@@ -1,8 +1,10 @@
 # Corrected Kwon experiment — 18 October 2026
 
-The project objective is reproduction of Kwon et al. (2023), DOI
-10.1109/JTEHM.2023.3295775. The corrected implementation and next controlled
-experiment have been run, but successful scientific reproduction is not established.
+The project aims to detect breathing rate and segment breathing-associated
+facial regions from thermal video. Kwon et al. (2023), DOI
+10.1109/JTEHM.2023.3295775, guides the segmentation branch. The corrected
+implementation and its first controlled experiment have been run, but
+successful reproduction of the paper's published result is not established.
 
 Implemented correct inverse KLT stabilization, four-second sample-standard-deviation
 BAF, maximum-normalized BAP, dynamic two-class MRF/ICM, and integrated masked frame
@@ -25,6 +27,10 @@ additional four-second warm-up/recovery. Seven windows lack endpoint support and
 has zero eligible windows out of 36 candidates: MAE is undefined. This is a
 coverage failure under the declared protocol, not a measured MRF accuracy failure.
 The rules were not relaxed after observing the result.
+
+An explicitly [exploratory 12-second follow-up](short_segment_results.md) later
+produced paired estimates on supported portions of the same recordings. It is
+reported separately and does not change the original 20-second outcome.
 
 ## Auxiliary alignment-only comparison
 

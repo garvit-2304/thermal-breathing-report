@@ -1,4 +1,4 @@
-**Current priority (18 October 2026): reproduce Kwon BAFR segmentation.** The neural roadmap below is historical exploratory work. See [corrected experiment](kwon_experiment_results.md): dynamic MRF is implemented, but 0/84 windows satisfy temporal-support criteria; published performance remains unreproduced.
+**Project aim:** a thermal-video breathing-rate detector with breathing-region segmentation. Kwon's paper guides the segmentation branch and JoulesEye guides tracking. The [corrected 20-second experiment](kwon_experiment_results.md) had 0/84 eligible MRF windows; an [exploratory 12-second follow-up](short_segment_results.md) measured short supported portions but does not replace that outcome. The neural roadmap below is exploratory work on the rate-estimation branch.
 
 # Research assessment and next experiments
 

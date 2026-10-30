@@ -6,6 +6,8 @@ The corrected KLT → four-second sample-SD BAF → BAP → per-frame MRF implem
 
 The repository contains **five people, one recording each**, with four usable frame/reference pairs. It remains a research pilot.
 
+The [31 October exploratory follow-up](docs/short_segment_results.md) evaluates 12-second supported portions of the same recordings. On 14 paired still windows from four people, spectral macro MAE changes from 4.874 to 2.564 breaths/min with dynamic MRF; the moving condition does not improve. This short-window result does not replace the original unevaluable 20-second comparison. See the [locked protocol](docs/short_segment_protocol.md) and [executed notebook](docs/short_segment_experiment.ipynb).
+
 ## What was wrong with the previous result
 
 The saved legacy result reports 15.40 breaths/min MAE from peak counting. It is not a trustworthy model comparison:
@@ -23,7 +25,7 @@ Run `python -m thermal_face.data --out artifacts/data_audit.json` to regenerate 
 
 The presentation walkthrough is available in
 [`docs/thermal_respiration_walkthrough.ipynb`](docs/thermal_respiration_walkthrough.ipynb)
-The GitHub notebook copies omit execution outputs to avoid uploading participant images. Full executed notebooks and HTML remain local.
+and its browser-readable [HTML edition](docs/thermal_respiration_walkthrough.html).
 The restored dataset is nested under `Manuel_clean/` (which contains all five
 people, not just Manuel), together with supplied legacy BAF/BAP maps and BAFR
 masks. The notebook keeps these supplied maps separate from freshly computed
@@ -139,8 +141,3 @@ seed sensitivity, and sampled overlays. Fixed crops remain the default pipeline.
 ## Data handling
 
 Original frames and CSVs are local data and excluded by `.gitignore`. Do not publish face recordings, identity labels, or trained recognition embeddings without confirming participant consent and dataset terms. The image files are 8-bit RGB containers with identical grayscale channels; they are not recoverable 16-bit temperature measurements. Do not convert these intensities into degrees Celsius.
-
-
-## Published report and scope
-
-The report source is at `main.tex` in the repository root. Aggregate experiment results and protocols are in `docs/`. This repository includes implementation, tests, configuration and legacy provenance. Raw datasets, per-frame traces, participant images, third-party paper PDFs, local dependencies and generated HTML are excluded. Re-running the data-dependent experiments requires obtaining the dataset separately and placing it under `Manuel_clean/` as documented above.

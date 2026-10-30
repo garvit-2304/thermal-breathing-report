@@ -45,7 +45,8 @@ def integrate(original, experiment):
         cell['source'] = source
         if (cell.get('metadata', {}).get('tracking_integrated') or
                 cell.get('metadata', {}).get('kwon_integrated') or
-                cell.get('metadata', {}).get('short_segment_integrated')):
+                cell.get('metadata', {}).get('short_segment_integrated') or
+                cell.get('metadata', {}).get('constrained_mask_integrated')):
             continue
         if cell['cell_type'] == 'markdown' and (
             source.startswith('## CSRT tracking experiment') or

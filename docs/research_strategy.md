@@ -1,5 +1,7 @@
 **Project aim:** a thermal-video breathing-rate detector with breathing-region segmentation. Kwon's paper guides the segmentation branch and JoulesEye guides tracking. The [corrected 20-second experiment](kwon_experiment_results.md) had 0/84 eligible MRF windows; an [exploratory 12-second follow-up](short_segment_results.md) measured short supported portions but does not replace that outcome. The neural roadmap below is exploratory work on the rate-estimation branch.
 
+The next [spatial-constraint ablation](constrained_mask_results.md) was negative: a fixed perinasal ellipse over the MRF mask raised paired still spectral MAE from 2.564 to 3.350 breaths/min and reduced 12-second coverage from 29 to 23 windows. The independent [mask/box annotation packet](mask_annotation_guide.md) is ready locally. Visual tidiness is not enough to validate a breathing-associated region; the original MRF remains the experimental default pending human localization labels and continuous source data.
+
 # Research assessment and next experiments
 
 ## Three papers, three different purposes

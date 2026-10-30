@@ -70,3 +70,7 @@ Code: `thermal_face/evaluate_short_segments.py`. Saved window-level predictions,
 exclusions, per-person metrics and trace hashes:
 `artifacts/short_segment_experiment/evaluation.json`. The executed chapter is
 also appended to `docs/thermal_respiration_walkthrough.ipynb`.
+
+A subsequent [fixed spatial-constraint ablation](constrained_mask_results.md)
+did not improve this result and reduced coverage. It is documented separately
+to preserve the original short-segment outcome.

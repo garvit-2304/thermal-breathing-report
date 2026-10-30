@@ -550,6 +550,9 @@ def build(out_stem='thermal_respiration_walkthrough'):
     if out_stem == 'thermal_respiration_walkthrough' and (out.parent / 'short_segment_experiment.ipynb').exists():
         from integrate_short_segments import integrate as integrate_short_segments
         notebook = integrate_short_segments(notebook, json.loads((out.parent / 'short_segment_experiment.ipynb').read_text(encoding='utf-8')))
+    if out_stem == 'thermal_respiration_walkthrough' and (out.parent / 'constrained_mask_experiment.ipynb').exists():
+        from integrate_constrained_mask import integrate as integrate_constrained_mask
+        notebook = integrate_constrained_mask(notebook, json.loads((out.parent / 'constrained_mask_experiment.ipynb').read_text(encoding='utf-8')))
     render(notebook, out)
 
 

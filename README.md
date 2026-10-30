@@ -8,6 +8,8 @@ The repository contains **five people, one recording each**, with four usable fr
 
 The [31 October exploratory follow-up](docs/short_segment_results.md) evaluates 12-second supported portions of the same recordings. On 14 paired still windows from four people, spectral macro MAE changes from 4.874 to 2.564 breaths/min with dynamic MRF; the moving condition does not improve. This short-window result does not replace the original unevaluable 20-second comparison. See the [locked protocol](docs/short_segment_protocol.md) and [executed notebook](docs/short_segment_experiment.ipynb).
 
+A further [fixed perinasal-mask experiment](docs/constrained_mask_results.md) tested whether excluding obvious eye and face-edge pixels improves the original MRF trace. It did not: still spectral error rose from 2.564 to 3.350 breaths/min on the same 14 short windows, and overall eligible short windows fell from 29 to 23. The original 20-second test remains unevaluable. The constraint is retained as a negative ablation, not the default pipeline. A local 12-frame [annotation packet guide](docs/mask_annotation_guide.md) prepares independent localization and mask review across still and moving frames; no human labels have been collected yet.
+
 ## What was wrong with the previous result
 
 The saved legacy result reports 15.40 breaths/min MAE from peak counting. It is not a trustworthy model comparison:

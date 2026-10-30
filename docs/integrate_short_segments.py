@@ -6,7 +6,9 @@ from pathlib import Path
 
 def integrate(original, experiment):
     notebook = copy.deepcopy(original)
-    kept = [cell for cell in notebook['cells'] if not cell.get('metadata', {}).get('short_segment_integrated')]
+    kept = [cell for cell in notebook['cells']
+            if not (cell.get('metadata', {}).get('short_segment_integrated') or
+                    cell.get('metadata', {}).get('constrained_mask_integrated'))]
     notice = ('\n\n**Follow-up on 31 October 2026:** Section 16 evaluates 12-second supported '
               'segments after the original 20-second MRF comparison yielded no eligible windows. '
               'The follow-up is exploratory and does not replace the original result.\n')
@@ -38,6 +40,9 @@ def main():
     path = folder / 'thermal_respiration_walkthrough.ipynb'
     render(integrate(json.loads(path.read_text(encoding='utf-8')),
                      json.loads((folder / 'short_segment_experiment.ipynb').read_text(encoding='utf-8'))), path)
+    if (folder / 'constrained_mask_experiment.ipynb').exists():
+        from integrate_constrained_mask import main as integrate_constrained_mask
+        integrate_constrained_mask()
 
 
 if __name__ == '__main__':

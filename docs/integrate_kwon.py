@@ -12,6 +12,7 @@ def integrate(original, experiment):
         source = ''.join(cell['source'])
         if (cell.get('metadata', {}).get('kwon_integrated') or
                 cell.get('metadata', {}).get('short_segment_integrated') or
+                cell.get('metadata', {}).get('constrained_mask_integrated') or
                 source.startswith('## 15. Limitations after')):
             continue
         source = source.replace("The standard-deviation map in these scripts should not be called an exact reproduction of the paper's variance-based method. These scripts also contain machine-specific paths and are shown as historical evidence, not executed here.", CORRECTION)

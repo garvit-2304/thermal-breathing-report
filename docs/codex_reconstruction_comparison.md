@@ -17,6 +17,8 @@ The CNN + GRU tracking change is only 0.017 BPM in this run. Across three initia
 
 The report's Kwon-style MRF segmentation branch has zero eligible 20-second windows in its latest experiment (0/84 with correct alignment and 0/84 with deliberately incorrect alignment). Its segmentation accuracy therefore remains unmeasured in that experiment. The alignment-only comparison covers 65 shared windows and changes peak-counting MAE from 6.26 to 5.04 BPM, while frequency-estimator MAE changes from 10.12 to 10.54 BPM.
 
+The GitHub repository also contains later MRF follow-ups beyond the supplied report. Its 31 October short-segment experiment reports spectral macro MAE changing from 4.874 to 2.564 BPM on 14 paired still windows; the moving condition does not improve. A subsequent fixed perinasal-mask ablation raises the still-window error to 3.350 BPM and reduces eligible short windows from 29 to 23. These are distinct, shorter-window experiments: they add evidence beyond the supplied report's 0/84 result but do not establish a general segmentation benefit or form a matched comparison with the local reconstruction.
+
 ## Results in the local reconstruction
 
 The later reconstruction recovers all five recordings and 14,154 thermal frames from the ROS bags, retaining image-header timestamps and raw `mono16` counts. Its exploratory leave-one-subject-out nose-rate MAE is 4.72 BPM for raw signals, 4.62 for PWS graph filtering, and 4.91 for GTV. The small PWS change does not establish a gain.

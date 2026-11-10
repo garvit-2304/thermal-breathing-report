@@ -1,3 +1,9 @@
+## LCAS thermal respiration reconstruction
+
+The second project is included in [`lcas-thermal-respiration-reconstruction/`](./lcas-thermal-respiration-reconstruction/). Its scripts, workflow documentation, data setup notes, requirements, and notebooks are kept together in that folder. The original reconstruction report PDF remains available in the [source repository](https://github.com/garvit-2304/lcas-thermal-respiration-reconstruction/blob/main/reports/thermal_respiration_project_report.pdf).
+
+---
+
 # Thermal face respiration research
 
 The project aims to build a breathing-rate detector with facial breathing-region segmentation from thermal video. Kwon et al. guides the segmentation work; JoulesEye informs nasal tracking during movement. Data processing, signal-based estimation, CNN/GRU comparisons, tracking and segmentation are all part of this project. The complete detector is not yet validated.

@@ -1,6 +1,5 @@
 # Project report
 
-`thermal_respiration_project_report.pdf` documents the timestamped thermal-respiration reconstruction, its exploratory results, visual examples, and remaining research limitations.
+The thermal respiration reconstruction report documents the timestamped reconstruction, exploratory results, visual examples, and remaining research limitations.
 
-This is the report for the reconstruction source code in this repository. It is separate from the supplied `Report.pdf` describing the CNN/GRU and MRF attempt; that other report is not included here.
-
+The PDF remains available in the [original repository](https://github.com/garvit-2304/lcas-thermal-respiration-reconstruction/blob/main/reports/thermal_respiration_project_report.pdf). It is separate from the supplied `Report.pdf` describing the CNN/GRU and MRF attempt.

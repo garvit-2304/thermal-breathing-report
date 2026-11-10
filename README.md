@@ -28,7 +28,7 @@ Inside `thermal-breathing-detector/`:
 - `config/`: provisional facial and nasal region definitions used in experiments.
 - `docs/`: experiment protocols, dataset audits, results, limitations, and notebooks.
 - `legacy/`: earlier scripts and outputs retained for reference.
-- `reports/`: project reports and presentation materials.
+- `thermal_breathing_progress_report.pdf`: project progress report.
 
 ## Data and privacy
 
@@ -52,7 +52,7 @@ python -m venv .venv
 python -m pip install -r thermal-breathing-detector/requirements.txt
 ```
 
-The root requirements support the main thermal pipeline. Some optional tracking and segmentation experiments use additional packages listed in `requirements-tracking.txt` and `requirements-kwon.txt`.
+The main pipeline requirements are in `thermal-breathing-detector/requirements.txt`. Optional tracking and segmentation experiments use `thermal-breathing-detector/requirements-tracking.txt` and `thermal-breathing-detector/requirements-kwon.txt`.
 
 See the [main workflow notebook](thermal-breathing-detector/docs/thermal_respiration_walkthrough.ipynb), the [research strategy](thermal-breathing-detector/docs/research_strategy.md), and the companion project's [workflow guide](lcas-thermal-respiration-reconstruction/docs/workflow.md) for data setup and experiment commands. Individual scripts also provide command-line help.
 

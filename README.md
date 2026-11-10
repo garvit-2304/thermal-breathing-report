@@ -4,7 +4,7 @@ This repository brings together two related research efforts on contactless brea
 
 ## Project overview
 
-The work combines two complementary pipelines:
+The work combines two complementary pipelines, each organized in its own folder:
 
 1. **Thermal breathing-rate detection.** This pipeline audits the L-CAS recordings, preserves image timestamps, extracts nasal and facial-region signals, and compares classical rate estimators with CNN and CNN+GRU models. It also explores movement tracking, graph filtering, and inhalation-event detection.
 2. **BAFR segmentation reconstruction.** This pipeline studies the breathing-associated facial region (BAFR) using perinasal regions of interest, temporal breathing-associated features, breathing-associated probabilities, and Markov Random Field (MRF) segmentation. It follows ideas from Kwon et al. and tests how these steps behave on the available L-CAS data.
@@ -19,8 +19,12 @@ The two pipelines use related recordings but have different processing choices a
 
 ## What the repository contains
 
-- `thermal_face/`: thermal data loading, timestamp-aware signal processing, breathing-rate models, tracking, and Kwon-inspired segmentation.
+- `thermal-breathing-detector/`: thermal data loading, timestamp-aware signal processing, breathing-rate models, tracking, and Kwon-inspired segmentation.
 - `lcas-thermal-respiration-reconstruction/`: the companion reconstruction project, including scripts, setup notes, workflow documentation, and its report.
+The shared `README.md` and `.gitignore` remain at the repository root.
+
+Inside `thermal-breathing-detector/`:
+
 - `config/`: provisional facial and nasal region definitions used in experiments.
 - `docs/`: experiment protocols, dataset audits, results, limitations, and notebooks.
 - `legacy/`: earlier scripts and outputs retained for reference.
@@ -45,12 +49,12 @@ Use Python 3.10–3.12 and create a virtual environment:
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
+python -m pip install -r thermal-breathing-detector/requirements.txt
 ```
 
 The root requirements support the main thermal pipeline. Some optional tracking and segmentation experiments use additional packages listed in `requirements-tracking.txt` and `requirements-kwon.txt`.
 
-See the [main workflow notebook](docs/thermal_respiration_walkthrough.ipynb), the [research strategy](docs/research_strategy.md), and the companion project's [workflow guide](lcas-thermal-respiration-reconstruction/docs/workflow.md) for data setup and experiment commands. Individual scripts also provide command-line help.
+See the [main workflow notebook](thermal-breathing-detector/docs/thermal_respiration_walkthrough.ipynb), the [research strategy](thermal-breathing-detector/docs/research_strategy.md), and the companion project's [workflow guide](lcas-thermal-respiration-reconstruction/docs/workflow.md) for data setup and experiment commands. Individual scripts also provide command-line help.
 
 ## Next steps
 
